@@ -1,5 +1,7 @@
 package com.cristiandpt.device_emitter
 
+import com.cristiandpt.device_emitter.models.MeasurementType
+import com.cristiandpt.device_emitter.utils.MeasurementGenerator
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.ThreadLocalRandom
@@ -15,7 +17,9 @@ class MeasurementTask constructor(private val taskExecutor: TaskScheduler) {
             println("Random: $delaySeconds")
             val nextExecutionTime = Instant.now().plus(delaySeconds, ChronoUnit.SECONDS)
             try {
-                println("asdf")
+                val bloodMeasurements =
+                        MeasurementGenerator.measurementFactory(MeasurementType.BloodPressure)
+                println("Generating the blood pressure ${bloodMeasurements}")
             } catch (e: Exception) {
                 println("Error executing task: ${e.message}")
             } finally {
