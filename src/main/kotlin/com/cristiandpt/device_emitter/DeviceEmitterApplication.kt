@@ -1,29 +1,28 @@
 package com.cristiandpt.device_emitter
 
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.scheduling.TaskScheduler
 
 @SpringBootApplication
-class DeviceEmitterApplication : ApplicationRunner {
+class DeviceEmitterApplication
+@Autowired
+constructor(
+        private val taskScheduler: TaskScheduler,
+        private val measurementTask: MeasurementTask
+) : ApplicationRunner {
 
     override fun run(args: ApplicationArguments) {
-        runBlocking {
-            coroutineScope {
-                val greenThreadsNumber = 1_000
-                val jobs =
-                        List(greenThreadsNumber) { index ->
-                            launch {
-                                delay(700)
-                                println("Corountine $index Completed!")
-                            }
-                        }
-                jobs.forEach { it.join() }
-            }
-        }
-
+        taskScheduler.schedule(
+                measurementTask.MeasureGeneration(),
+                Instant.now().plus(1, ChronoUnit.SECONDS)
+        )
         println("All work done!")
     }
 }
