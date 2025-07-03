@@ -1,47 +1,44 @@
 version: "3.8"
 
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    hostname: zookeeper
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - kafka-net
-
   kafka:
-    image: confluentinc/cp-kafka:7.5.0 # Pinned version
+    image: confluentinc/cp-kafka # KRaft-only Kafka image
     container_name: kafka
     hostname: kafka
     ports:
-      - "9092:9092"
-      - "9093:9093"
+      - "9092:9092" # Broker listener
+      - "9093:9093" # External access listener
+      - "9094:9094" # Controller listener
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9094
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9094,PLAINTEXT_HOST://0.0.0.0:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
 
-      # --- RE-INTRODUCE THIS FIX FOR THE "No security protocol defined" error ---
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      # --- END RE-INTRODUCTION ---
-
-      # KAFKA_CLUSTER_ID: "" # Should not be needed with 7.5.0 in Zookeeper mode
+      KAFKA_LOG_DIRS: "/var/lib/kafka/data" # Container path for log data
+      KAFKA_METADATA_LOG_DIR: "/var/lib/kafka/metadata" # Container path for metadata
+      CLUSTER_ID: "auto"
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_CREATE_TOPICS: "measurement-topic:1:1"
-    depends_on:
-      - zookeeper
+
+    volumes: # Use bind mounts for direct host path mapping
+      - ./data/kafka-data:/var/lib/kafka/data # Host path relative to docker-compose.yml
+      - ./data/kafka-metadata:/var/lib/kafka/metadata # Host path relative to docker-compose.yml
+
     networks:
       - kafka-net
 
 networks:
   kafka-net:
     driver: bridge
+# No need for named volumes if using bind mounts
+# volumes:
+#   kafka-data:
+#   kafka-metadata:
