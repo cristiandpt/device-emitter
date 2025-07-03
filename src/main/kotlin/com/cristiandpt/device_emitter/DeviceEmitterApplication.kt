@@ -15,10 +15,12 @@ class DeviceEmitterApplication
 @Autowired
 constructor(
         private val taskScheduler: TaskScheduler,
-        private val measurementTask: MeasurementTask
+        private val measurementTask: MeasurementTask,
+        private val kafkaProducerService: KafkaProducerService
 ) : ApplicationRunner {
 
     override fun run(args: ApplicationArguments) {
+        kafkaProducerService.sendMessage("Hello, ", "Cristian")
         taskScheduler.schedule(
                 measurementTask.MeasureGeneration(),
                 Instant.now().plus(1, ChronoUnit.SECONDS)
