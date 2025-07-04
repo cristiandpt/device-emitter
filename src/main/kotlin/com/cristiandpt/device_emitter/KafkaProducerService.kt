@@ -5,7 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 
 @Service
-class KafkaProducerService constructor(val kafkaTemplate: KafkaTemplate<String, Any>) {
+class KafkaProducerService<T> constructor(val kafkaTemplate: KafkaTemplate<String, T>) {
 
     // Inject the topic name from application.properties or define it directly
     @Value("\${kafka.topic.name:measurement-topic}") // Default to "measurement-topic" if not set
@@ -15,7 +15,7 @@ class KafkaProducerService constructor(val kafkaTemplate: KafkaTemplate<String, 
      * Sends a message to the configured Kafka topic.
      * @param message The message to send.
      */
-    fun sendMessage(message: Any) {
+    fun sendMessage(message: T) {
         kafkaTemplate.send(topicName, message)
 
         // For more robust error handling and callbacks:
@@ -43,7 +43,7 @@ class KafkaProducerService constructor(val kafkaTemplate: KafkaTemplate<String, 
      * @param key The key for the message.
      * @param message The message to send.
      */
-    fun sendMessage(key: String, message: Any) {
+    fun sendMessage(key: String, message: T) {
         kafkaTemplate.send(topicName, key, message)
     }
 }

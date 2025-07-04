@@ -1,5 +1,7 @@
 package com.cristiandpt.device_emitter
 
+import com.cristiandpt.device_emitter.converter.BloodPressureModelToBloodPressureDtoConverter
+import com.cristiandpt.devive_emitter.converter.BloodPressureEntityToBloodPressureModelConverter
 import com.cristiandpt.devive_emitter.converter.BloodPressureModelToBloodPressureEntityConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -37,7 +39,8 @@ class TaksExecutorConfig {
 
         // Register your custom converters here
         conversionService.addConverter(BloodPressureModelToBloodPressureEntityConverter())
-
+        conversionService.addConverter(BloodPressureModelToBloodPressureDtoConverter())
+        conversionService.addConverter(BloodPressureEntityToBloodPressureModelConverter())
         return conversionService
     }
 }
