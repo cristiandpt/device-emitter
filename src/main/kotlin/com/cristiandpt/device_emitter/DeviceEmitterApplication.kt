@@ -9,9 +9,10 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.scheduling.TaskScheduler
+import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @SpringBootApplication
-@Ena
+@EnableTransactionManagement
 class DeviceEmitterApplication
 @Autowired
 constructor(
