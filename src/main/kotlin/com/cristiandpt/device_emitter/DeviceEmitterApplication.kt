@@ -11,6 +11,7 @@ import org.springframework.boot.runApplication
 import org.springframework.scheduling.TaskScheduler
 
 @SpringBootApplication
+@Ena
 class DeviceEmitterApplication
 @Autowired
 constructor(
