@@ -13,11 +13,12 @@ interface BloodPressureRepository : JpaRepository<BloodPressureEntity, Long> {
             SELECT
                 *
             FROM
-                measurement_records
+                blood_pressure
             ORDER BY
                 id ASC
             LIMIT 10
-        """
+        """,
+            nativeQuery = true
     )
     fun findTop10RecordsNativeSql(): List<BloodPressureEntity>
 }

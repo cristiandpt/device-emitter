@@ -1,6 +1,6 @@
 package com.cristiandpt.device_emitter
 
-import com.cristiandpt.device_emitter.repository.MeasurementService
+import com.cristiandpt.device_emitter.repository.MeasurementRepository
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class BatchDataSenderService
 constructor(
-        private val repository: MeasurementService,
+        private val repository: MeasurementRepository,
         private val kafkaProducer: KafkaProducerService
 ) {
 

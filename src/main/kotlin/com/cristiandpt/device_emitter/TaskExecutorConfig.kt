@@ -1,7 +1,10 @@
 package com.cristiandpt.device_emitter
 
+import com.cristiandpt.devive_emitter.converter.BloodPressureModelToBloodPressureEntityConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.convert.ConversionService
+import org.springframework.core.convert.support.DefaultConversionService
 import org.springframework.core.task.TaskExecutor
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -27,4 +30,14 @@ class TaksExecutorConfig {
                 poolSize = 10
                 initialize()
             }
+
+    @Bean
+    fun conversionService(): ConversionService {
+        val conversionService = DefaultConversionService()
+
+        // Register your custom converters here
+        conversionService.addConverter(BloodPressureModelToBloodPressureEntityConverter())
+
+        return conversionService
+    }
 }

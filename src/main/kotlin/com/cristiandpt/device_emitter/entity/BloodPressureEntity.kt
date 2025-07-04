@@ -12,7 +12,7 @@ import java.math.BigDecimal
 @Entity
 @Table(name = "blood_pressure")
 data class BloodPressureEntity(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 1,
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 0L,
         @field:NotNull(message = "User ID is mandatory")
         @field:Digits(
                 integer = 20,

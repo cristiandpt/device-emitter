@@ -20,15 +20,15 @@ class MeasurementGenerator() {
                 }
 
         fun generateBloodPressureData(): BloodPressureMeasurement {
-            val min = BigDecimal("10.00")
-            val max = BigDecimal("20.00")
+            val min = BigDecimal("50.00")
+            val max = BigDecimal("200.00")
             val zonedDateTime = Instant.now().run { atZone(ZoneId.systemDefault()) }
 
             val formattedString: String =
                     zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             return BloodPressureMeasurement(
                     timeStamp = formattedString,
-                    userId = BigDecimal("1.0"),
+                    userId = BigDecimal("1"),
                     diastolic = generateRandomBigDecimal(min, max),
                     systolic = generateRandomBigDecimal(min, max),
                     meanArterialPressure = generateRandomBigDecimal(min, max),

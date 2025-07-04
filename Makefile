@@ -38,3 +38,12 @@ clean:
 
 deep_clean:
 	find -mindepth 1 ! -name "Makefile" -exec rm -rf {} +
+
+kafka-desribe:
+	kafka-topics --bootstrap-server kafka:9092 --describe --topic measurement-topic
+
+kafka-list:
+	kafka-topics --bootstrap-server kafka:9092 --list
+
+kafka-published:
+	docker exec -it kafka kafka-console-consumer --bootstrap-server kafka:9092 --topic measurement-topic --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer

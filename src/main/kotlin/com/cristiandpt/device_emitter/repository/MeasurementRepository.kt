@@ -23,7 +23,7 @@ constructor(
         entity?.let { bloodPressure.save(it) }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun fetchTop10Measurements(): List<BloodPressureEntity> =
             bloodPressure.findTop10RecordsNativeSql()
 }
