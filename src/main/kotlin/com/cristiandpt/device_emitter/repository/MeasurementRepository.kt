@@ -10,7 +10,8 @@ import org.springframework.validation.annotation.Validated
 
 @Service
 @Validated
-class MeasurementService(
+class MeasurementService
+constructor(
         private val bloodPressure: BloodPressureRepository,
         private val conversionService: ConversionService
 ) {
@@ -21,4 +22,8 @@ class MeasurementService(
                 conversionService.convert(bloodPressureMeasurement, BloodPressureEntity::class.java)
         entity?.let { bloodPressure.save(it) }
     }
+
+    @Transactional
+    fun fetchTop10Measurements(): List<BloodPressureEntity> =
+            bloodPressure.findTop10RecordsNativeSql()
 }
