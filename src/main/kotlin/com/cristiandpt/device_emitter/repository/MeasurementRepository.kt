@@ -1,7 +1,7 @@
 package com.cristiandpt.device_emitter.repository
 
-import BloodPressureMeasurement
 import com.cristiandpt.device_emitter.entity.BloodPressureEntity
+import com.cristiandpt.device_emitter.models.BloodPressureMeasurement
 import jakarta.validation.Valid
 import org.springframework.core.convert.ConversionService
 import org.springframework.stereotype.Service

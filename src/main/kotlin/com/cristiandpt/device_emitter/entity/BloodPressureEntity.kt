@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import jakarta.validation.constraints.*
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "blood_pressure")
@@ -46,5 +47,8 @@ data class BloodPressureEntity(
         @field:DecimalMin(value = "30.00", message = "Pulse rate must be at least 30.00")
         @field:DecimalMax(value = "200.00", message = "Pulse rate must be at most 200.00")
         @Column(name = "pulse_rate", precision = 5, scale = 2)
-        val pulseRate: BigDecimal
+        val pulseRate: BigDecimal,
+        @field:NotNull(message = "Creation time is mandatory")
+        @Column(name = "created_at")
+        val createdAt: LocalDateTime
 )

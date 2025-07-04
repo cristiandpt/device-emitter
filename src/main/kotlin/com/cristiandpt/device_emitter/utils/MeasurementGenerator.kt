@@ -1,12 +1,11 @@
 package com.cristiandpt.device_emitter.utils
 
-import BloodPressureMeasurement
+import com.cristiandpt.device_emitter.models.BloodPressureMeasurement
 import com.cristiandpt.device_emitter.models.MeasurementType
 import com.cristiandpt.device_emitter.models.MeasurementType.*
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class MeasurementGenerator() {
 
@@ -24,10 +23,8 @@ class MeasurementGenerator() {
             val max = BigDecimal("200.00")
             val zonedDateTime = Instant.now().run { atZone(ZoneId.systemDefault()) }
 
-            val formattedString: String =
-                    zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             return BloodPressureMeasurement(
-                    timeStamp = formattedString,
+                    measuredAt = zonedDateTime.toLocalDateTime(),
                     userId = BigDecimal("1"),
                     diastolic = generateRandomBigDecimal(min, max),
                     systolic = generateRandomBigDecimal(min, max),

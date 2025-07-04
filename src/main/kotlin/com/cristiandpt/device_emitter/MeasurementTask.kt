@@ -1,6 +1,6 @@
 package com.cristiandpt.device_emitter
 
-import BloodPressureMeasurement
+import com.cristiandpt.device_emitter.models.BloodPressureMeasurement
 import com.cristiandpt.device_emitter.models.MeasurementType
 import com.cristiandpt.device_emitter.repository.MeasurementRepository
 import com.cristiandpt.device_emitter.utils.MeasurementGenerator
