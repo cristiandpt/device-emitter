@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated
 
 @Service
 @Validated
-class MeasurementService
+class MeasurementRepository
 constructor(
         private val bloodPressure: BloodPressureRepository,
         private val conversionService: ConversionService

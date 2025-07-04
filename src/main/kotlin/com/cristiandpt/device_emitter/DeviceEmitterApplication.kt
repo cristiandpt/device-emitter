@@ -25,7 +25,7 @@ constructor(
                 measurementTask.MeasureGeneration(),
                 Instant.now().plus(1, ChronoUnit.SECONDS)
         )
-        println("All work done!")
+        println("Start generating measurements!")
     }
 }
 
