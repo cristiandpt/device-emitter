@@ -1,13 +1,20 @@
 package com.cristiandpt.device_emitter
 
+import com.cristiandpt.device_emitter.dto.BloodPressureKafkaDto
+import com.cristiandpt.device_emitter.event.BloodPressureMeasuredEvent
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.event.EventListener
+import org.springframework.core.convert.ConversionService
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
-class KafkaProducerService<T> constructor(val kafkaTemplate: KafkaTemplate<String, T>) {
+class KafkaProducerService<T>
+constructor(
+        val kafkaTemplate: KafkaTemplate<String, T>,
+        private val conversionService: ConversionService
+) {
 
     // Inject the topic name from application.properties or define it directly
     @Value("\${kafka.topic.name:measurement-topic}") // Default to "measurement-topic" if not set
@@ -17,8 +24,6 @@ class KafkaProducerService<T> constructor(val kafkaTemplate: KafkaTemplate<Strin
      * Sends a message to the configured Kafka topic.
      * @param message The message to send.
      */
-    @Async
-    @EventListener
     fun sendMessage(message: T) {
         kafkaTemplate.send(topicName, message)
 
@@ -49,5 +54,17 @@ class KafkaProducerService<T> constructor(val kafkaTemplate: KafkaTemplate<Strin
      */
     fun sendMessage(key: String, message: T) {
         kafkaTemplate.send(topicName, key, message)
+    }
+
+    @Async
+    @EventListener
+    fun sendByEvent(event: T) {
+        val bloodPressure = event as? BloodPressureMeasuredEvent
+        bloodPressure?.let {
+            conversionService.convert(it, BloodPressureKafkaDto::class.java)?.let {
+                val data = it as? T
+                data?.let { kafkaTemplate.send(topicName, it) }
+            }
+        }
     }
 }
