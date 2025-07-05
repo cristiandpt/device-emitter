@@ -1,7 +1,9 @@
 package com.cristiandpt.device_emitter
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.event.EventListener
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,6 +17,8 @@ class KafkaProducerService<T> constructor(val kafkaTemplate: KafkaTemplate<Strin
      * Sends a message to the configured Kafka topic.
      * @param message The message to send.
      */
+    @Async
+    @EventListener
     fun sendMessage(message: T) {
         kafkaTemplate.send(topicName, message)
 

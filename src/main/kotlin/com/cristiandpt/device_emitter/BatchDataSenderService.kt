@@ -1,8 +1,10 @@
 package com.cristiandpt.device_emitter
 
 import com.cristiandpt.device_emitter.dto.BloodPressureKafkaDto
+import com.cristiandpt.device_emitter.event.BloodPressureMeasuredEvent
 import com.cristiandpt.device_emitter.models.BloodPressureMeasurement
 import com.cristiandpt.device_emitter.repository.MeasurementRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.core.convert.ConversionService
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
@@ -13,7 +15,8 @@ class BatchDataSenderService
 constructor(
         private val repository: MeasurementRepository,
         private val kafkaProducer: KafkaProducerService<Any>,
-        private val conversionService: ConversionService
+        private val conversionService: ConversionService,
+        private val eventPublisher: ApplicationEventPublisher
 ) {
 
     @Async
@@ -23,11 +26,11 @@ constructor(
         val entities = repository.fetchTop10Measurements()
         if (entities.isEmpty()) return
         entities.forEach {
-            val measurementDto =
-                    conversionService.convert(it, BloodPressureMeasurement::class.java)?.let {
-                        conversionService.convert(it, BloodPressureKafkaDto::class.java)
-                    }
-            measurementDto?.also { dto -> kafkaProducer.sendMessage(dto) }
+            conversionService.convert(it, BloodPressureMeasurement::class.java)?.let {
+                val event = BloodPressureMeasuredEvent(this, it)
+                eventPublisher.publishEvent(event)
+            }
+        }
         }
     }
 }
