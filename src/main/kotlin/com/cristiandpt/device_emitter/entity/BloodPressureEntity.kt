@@ -14,13 +14,13 @@ import java.time.LocalDateTime
 @Table(name = "blood_pressure")
 data class BloodPressureEntity(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 0L,
-        @field:NotNull(message = "User ID is mandatory")
         @field:Digits(
                 integer = 20,
                 fraction = 0,
                 message = "User ID must be a valid number with no decimal places"
         )
         @Column(name = "user_id", precision = 20, scale = 0)
+        @field:NotNull(message = "User ID is mandatory")
         val userId: BigDecimal,
         @field:NotNull(message = "Systolic pressure is mandatory")
         @field:DecimalMin(value = "50.00", message = "Systolic pressure must be at least 50.00")

@@ -26,4 +26,9 @@ constructor(
     @Transactional(readOnly = true)
     fun fetchTop10Measurements(): List<BloodPressureEntity> =
             bloodPressure.findTop10RecordsNativeSql()
+
+    @Transactional
+    fun deleteById(id: Long) {
+        bloodPressure.deleteById(id)
+    }
 }
