@@ -14,6 +14,9 @@ import org.mockito.kotlin.verify
 import org.springframework.scheduling.TaskScheduler
 import java.time.Instant
 
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.whenever
+
 @ExtendWith(MockitoExtension::class)
 class MeasurementTaskTest {
 
@@ -42,6 +45,19 @@ class MeasurementTaskTest {
 
         // Then
         verify(repository).saveBloodMeasurement(any<BloodPressureMeasurement>())
+        verify(taskScheduler).schedule(runnableCaptor.capture(), instantCaptor.capture())
+    }
+
+    @Test
+    fun `should schedule next execution even if current one fails`() {
+        // Given
+        val measureGeneration = measurementTask.MeasureGeneration()
+        whenever(repository.saveBloodMeasurement(any())).doThrow(RuntimeException("DB error"))
+
+        // When
+        measureGeneration.run()
+
+        // Then
         verify(taskScheduler).schedule(runnableCaptor.capture(), instantCaptor.capture())
     }
 }
